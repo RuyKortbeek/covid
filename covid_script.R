@@ -4,6 +4,7 @@ library(tidyverse)
 # Read data from github repo #
 ##############################
 
+# Load latest dasta from the Dutch Natuional Institute of Health (RIVM)
 df <- read_csv2(file = "https://data.rivm.nl/covid-19/COVID-19_aantallen_gemeente_per_dag.csv",
          col_names = TRUE) %>%
   dplyr::group_by(Municipality_code, Date_of_publication) %>%
