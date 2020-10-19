@@ -32,8 +32,9 @@ df %>%
              fill = case))+
   geom_bar(stat = "identity")+
   facet_wrap(~case, ncol = 1, scale = "free")+
-  ylab("Number of cases")+
-  xlab("Date")
+  ylab("Number of cases per day")+
+  xlab("Date")+
+  theme_bw()
 
 ##############
 # Cumulative #
