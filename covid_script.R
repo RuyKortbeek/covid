@@ -1,4 +1,5 @@
 library(tidyverse)
+library(ggbiplot)
 
 ##############################
 # Read data from github repo #
@@ -108,3 +109,33 @@ df %>%
   ylab("Number of cases")+
   xlab("Date")+
   theme_bw()
+
+
+
+######################
+# PCA and regression #
+######################
+
+df.pca <- df %>%
+  select(Date_of_publication, Municipality_name, ROAZ_region, Province, case, number) %>%
+  filter(case == "Total_reported") %>%
+  dplyr::group_by(Date_of_publication, Province, Municipality_name) %>%
+  dplyr::summarise(sum_number = sum(number)) %>%
+  drop_na() 
+
+
+matrix.pca <- df.pca %>% select(Date_of_publication, Municipality_name, sum_number) %>%
+  pivot_wider( names_from = "Date_of_publication",
+         values_from = "sum_number") %>%
+  drop_na(Municipality_name) %>%
+  column_to_rownames("Municipality_name")
+
+
+pca <- prcomp(log(matrix.pca[,2:ncol(matrix.pca)]+1))
+
+ggbiplot(pca,
+         var.axes = FALSE,
+         groups = matrix.pca$Province,
+         ellipse = TRUE,
+         labels = rownames(matrix.pca))+
+  theme_minimal()
